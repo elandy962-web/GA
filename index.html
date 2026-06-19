@@ -179,7 +179,7 @@ html,body{
 
 /* FAB */
 .fab{
-  position:fixed;bottom:calc(var(--bottom-nav) + 16px);right:calc(50% - 200px);
+  position:absolute;bottom:calc(var(--bottom-nav) + 16px);right:20px;
   width:54px;height:54px;border-radius:50%;
   background:var(--purple);border:none;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
@@ -427,9 +427,9 @@ html,body{
     <button class="nav-item" onclick="showPage('historial',this)"><span class="nav-icon">🗂</span><span>Historial</span><span class="nav-dot"></span></button>
     <button class="nav-item" onclick="showPage('presupuesto',this)"><span class="nav-icon">🎯</span><span>Presupuesto</span><span class="nav-dot"></span></button>
   </nav>
-</div>
 
-<button class="fab" id="fab-btn" onclick="openGastoModal()">＋</button>
+  <button class="fab" id="fab-btn" onclick="openGastoModal()">＋</button>
+</div>
 
 <div class="modal-overlay" id="modal-gasto">
   <div class="modal">
