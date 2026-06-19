@@ -3,1026 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>MisGastos</title>
+<title>MisGastos v2</title>
 <style>
+/* Estilos mantenidos igual para consistencia */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#f0eef8;
-  --white:#ffffff;
-  --purple:#6c5ce7;
-  --purple-light:#ede9ff;
-  --purple-mid:#9c88ff;
-  --gold:#8b7200;
-  --gold-bg:#fffbe6;
-  --gold-border:#f0d060;
-  --gold-btn:#8b7200;
-  --text:#1a1a2e;
-  --text2:#6b6b8a;
-  --text3:#aaaacc;
-  --green:#2ecc71;
-  --green-bg:#eafaf1;
-  --red:#e74c3c;
-  --red-bg:#fdecea;
-  --amber:#f39c12;
-  --shadow:0 2px 12px rgba(108,92,231,0.10);
-  --shadow-card:0 4px 20px rgba(108,92,231,0.08);
-  --radius:18px;
-  --radius-sm:12px;
-  --radius-xs:8px;
-  --bottom-nav:68px;
-}
-html,body{
-  height:100%;width:100%;
-  background:var(--bg);
-  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
-  color:var(--text);
-  overflow:hidden;
-  font-size:15px;
-}
-/* SHELL */
-#app{
-  position:fixed;inset:0;
-  display:flex;flex-direction:column;
-  max-width:430px;margin:0 auto;
-  background:var(--bg);
-}
-/* PAGES */
+:root{--bg:#f0eef8;--white:#ffffff;--purple:#6c5ce7;--purple-light:#ede9ff;--text:#1a1a2e;--text2:#6b6b8a;--text3:#aaaacc;--green:#2ecc71;--red:#e74c3c;--amber:#f39c12;--shadow:0 2px 12px rgba(108,92,231,0.10);--shadow-card:0 4px 20px rgba(108,92,231,0.08);--radius:18px;--radius-sm:12px;--bottom-nav:68px}
+html,body{height:100%;width:100%;background:var(--bg);font-family:'Segoe UI',sans-serif;color:var(--text);overflow:hidden;font-size:15px}
+#app{position:fixed;inset:0;display:flex;flex-direction:column;max-width:430px;margin:0 auto;background:var(--bg)}
 .pages{flex:1;overflow:hidden;position:relative}
-.page{
-  position:absolute;inset:0;
-  overflow-y:auto;overflow-x:hidden;
-  padding:0 0 calc(var(--bottom-nav) + 16px) 0;
-  display:none;
-  -webkit-overflow-scrolling:touch;
-}
+.page{position:absolute;inset:0;overflow-y:auto;padding:0 0 calc(var(--bottom-nav) + 16px) 0;display:none}
 .page.active{display:block}
-
-/* BOTTOM NAV */
-.bottom-nav{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-  width:100%;max-width:430px;
-  height:var(--bottom-nav);
-  background:var(--white);
-  border-top:1px solid rgba(108,92,231,0.10);
-  display:flex;
-  box-shadow:0 -4px 20px rgba(108,92,231,0.08);
-  z-index:100;
-}
-.nav-item{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;cursor:pointer;padding-bottom:4px;
-  background:none;border:none;color:var(--text3);
-  font-size:11px;font-weight:500;
-  transition:color .2s;
-}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:var(--bottom-nav);background:var(--white);border-top:1px solid rgba(108,92,231,0.1);display:flex;z-index:100}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;background:none;border:none;color:var(--text3);font-size:11px;font-weight:500}
 .nav-item.active{color:var(--purple)}
-.nav-item .nav-icon{font-size:22px;line-height:1}
-.nav-item .nav-dot{
-  width:4px;height:4px;border-radius:50%;background:var(--purple);
-  display:none;margin-top:-2px;
-}
-.nav-item.active .nav-dot{display:block}
-
-/* PAGE HEADER */
-.page-header{
-  padding:52px 20px 16px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.page-title{font-size:22px;font-weight:700;color:var(--text)}
-.header-btn{
-  width:40px;height:40px;border-radius:50%;
-  background:var(--white);border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:var(--shadow);font-size:18px;color:var(--purple);
-}
-
-/* MONTH NAV */
-.month-nav{
-  display:flex;align-items:center;justify-content:center;gap:20px;
-  padding:16px 20px 8px;
-}
-.month-btn{
-  width:38px;height:38px;border-radius:12px;
-  background:var(--white);border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:var(--shadow);font-size:18px;color:var(--purple);font-weight:700;
-}
-.month-label{font-size:18px;font-weight:700;color:var(--text);min-width:120px;text-align:center}
-
-/* CARDS */
-.card{
-  background:var(--white);border-radius:var(--radius);
-  padding:18px;margin:0 16px 12px;
-  box-shadow:var(--shadow-card);
-}
-.card-gold{
-  background:var(--gold-bg);
-  border:1.5px solid var(--gold-border);
-  border-radius:var(--radius);
-  padding:18px;margin:0 16px 12px;
-}
-
-/* SUMMARY CARD */
-.summary-hero{
-  background:var(--purple);border-radius:var(--radius);
-  padding:22px 20px;margin:8px 16px 12px;
-  color:#fff;
-}
-.summary-hero .label{font-size:12px;opacity:0.75;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.summary-hero .amount{font-size:36px;font-weight:700;letter-spacing:-1px}
-.summary-hero .sub{font-size:13px;opacity:.8;margin-top:4px}
+.nav-icon{font-size:22px;line-height:1}
+.page-header{padding:52px 20px 16px;display:flex;align-items:center;justify-content:space-between}
+.page-title{font-size:22px;font-weight:700}
+.summary-hero{background:var(--purple);border-radius:var(--radius);padding:22px 20px;margin:8px 16px 12px;color:#fff}
+.summary-hero .amount{font-size:36px;font-weight:700}
 .summary-row{display:flex;gap:10px;margin:0 16px 12px}
-.summary-mini{
-  flex:1;background:var(--white);border-radius:var(--radius-sm);
-  padding:14px 14px;box-shadow:var(--shadow-card);
-}
-.summary-mini .lbl{font-size:11px;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
-.summary-mini .val{font-size:18px;font-weight:700}
-.val.green{color:var(--green)}
-.val.red{color:var(--red)}
-.val.purple{color:var(--purple)}
-.val.amber{color:var(--amber)}
-
-/* BUDGET BAR */
-.budget-bar-wrap{margin-top:12px}
-.budget-bar-label{display:flex;justify-content:space-between;font-size:12px;opacity:.8;margin-bottom:6px}
-.budget-bar{height:6px;background:rgba(255,255,255,.25);border-radius:4px;overflow:hidden}
-.budget-fill{height:100%;background:#fff;border-radius:4px;transition:width .5s}
-
-/* CAT BREAKDOWN */
-.cat-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bg)}
-.cat-row:last-child{border-bottom:none}
-.cat-emoji{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.cat-info{flex:1}
-.cat-name{font-size:14px;font-weight:600;color:var(--text)}
-.cat-bar{height:4px;border-radius:4px;margin-top:4px}
-.cat-amount{font-size:14px;font-weight:600;color:var(--text);text-align:right}
-.cat-pct{font-size:11px;color:var(--text2);text-align:right;margin-top:2px}
-
-/* SECTION LABEL */
-.section-label{
-  font-size:12px;font-weight:700;color:var(--text2);
-  text-transform:uppercase;letter-spacing:.6px;
-  padding:12px 20px 6px;
-}
-
-/* EXPENSE LIST */
-.expense-item{
-  display:flex;align-items:center;gap:12px;
-  padding:14px 20px;
-  background:var(--white);
-  border-bottom:1px solid var(--bg);
-}
-.expense-item:first-child{border-radius:var(--radius) var(--radius) 0 0}
-.expense-item:last-child{border-bottom:none;border-radius:0 0 var(--radius) var(--radius)}
-.expense-items-wrap{background:var(--white);border-radius:var(--radius);margin:0 16px 12px;box-shadow:var(--shadow-card);overflow:hidden}
-.exp-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.exp-info{flex:1}
-.exp-name{font-size:14px;font-weight:600;color:var(--text)}
-.exp-sub{font-size:12px;color:var(--text2);margin-top:2px}
-.exp-amount{font-size:15px;font-weight:700;color:var(--text)}
-.exp-del{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
-
-/* FAB */
-.fab{
-  position:fixed;bottom:calc(var(--bottom-nav) + 16px);right:calc(50% - 200px);
-  width:54px;height:54px;border-radius:50%;
-  background:var(--purple);border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 6px 24px rgba(108,92,231,0.40);
-  font-size:26px;color:#fff;font-weight:300;
-  z-index:99;transition:transform .15s;
-}
-.fab:active{transform:scale(0.92)}
-
-/* FILTER CHIPS */
-.chips{display:flex;gap:8px;padding:4px 16px 12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.chips::-webkit-scrollbar{display:none}
-.chip{
-  flex-shrink:0;padding:7px 14px;border-radius:20px;
-  background:var(--white);border:1.5px solid transparent;
-  font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;
-  box-shadow:0 2px 8px rgba(0,0,0,.06);
-  white-space:nowrap;
-}
-.chip.active{background:var(--purple-light);border-color:var(--purple);color:var(--purple)}
-
-/* FIXED GASTOS */
-.fijo-header{
-  display:flex;justify-content:space-between;align-items:flex-start;
-  margin-bottom:12px;
-}
-.fijo-header-left h3{font-size:18px;font-weight:700;color:var(--gold-btn)}
-.fijo-header-left p{font-size:13px;color:var(--text2);margin-top:2px}
-.fijo-header-right{text-align:right}
-.fijo-total-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2)}
-.fijo-total-val{font-size:28px;font-weight:800;color:var(--gold-btn)}
-.btn-register-all{
-  width:100%;padding:14px;border-radius:var(--radius-sm);
-  background:var(--gold-btn);border:none;cursor:pointer;
-  color:#fff;font-size:15px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  margin-top:4px;
-}
-.btn-register-all:active{opacity:.85}
-
-.fijo-card{
-  background:var(--white);border-radius:var(--radius);
-  margin:0 16px 10px;
-  box-shadow:var(--shadow-card);
-  overflow:hidden;
-}
-.fijo-card-top{display:flex;align-items:center;gap:12px;padding:16px 16px 12px}
-.fijo-card-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-.fijo-card-info{flex:1}
-.fijo-card-info h4{font-size:15px;font-weight:700;color:var(--text)}
-.fijo-card-info p{font-size:13px;color:var(--text2);margin-top:2px}
-.fijo-card-right{display:flex;align-items:center;gap:8px}
-.btn-amount{
-  background:var(--purple-light);border:none;cursor:pointer;
-  border-radius:var(--radius-xs);padding:8px 12px;
-  font-size:13px;font-weight:700;color:var(--purple);
-  display:flex;align-items:center;gap:4px;
-}
-.btn-trash{
-  background:none;border:none;cursor:pointer;
-  color:var(--text3);font-size:22px;padding:4px;
-}
-.btn-registrar-mes{
-  width:100%;padding:13px;
-  background:var(--gold-bg);border:none;cursor:pointer;
-  color:var(--gold-btn);font-size:14px;font-weight:700;
-  border-top:1px solid var(--gold-border);
-  display:flex;align-items:center;justify-content:center;gap:6px;
-  transition:background .15s;
-}
-.btn-registrar-mes.done{
-  background:var(--green-bg);color:#27ae60;border-top-color:#a8e6c1;
-}
-.btn-registrar-mes:active{opacity:.8}
-
-/* TOGGLE */
-.toggle-wrap{display:flex;align-items:center;gap:8px}
-.toggle{
-  width:44px;height:24px;border-radius:12px;border:none;cursor:pointer;
-  position:relative;transition:background .2s;flex-shrink:0;
-}
-.toggle.on{background:var(--green)}
-.toggle.off{background:#ddd}
-.toggle::after{
-  content:'';position:absolute;top:3px;
-  width:18px;height:18px;border-radius:50%;background:#fff;
-  transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2);
-}
-.toggle.on::after{left:23px}
-.toggle.off::after{left:3px}
-
-/* MODALS */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.50);
-  z-index:300;display:none;align-items:flex-end;justify-content:center;
-}
+.summary-mini{flex:1;background:var(--white);border-radius:var(--radius-sm);padding:14px;box-shadow:var(--shadow-card)}
+.val{font-size:18px;font-weight:700}
+.val.green{color:var(--green)}.val.red{color:var(--red)}
+.fab{position:fixed;bottom:calc(var(--bottom-nav) + 16px);right:calc(50% - 200px);width:54px;height:54px;border-radius:50%;background:var(--purple);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;z-index:99}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex}
-.modal{
-  background:var(--white);border-radius:24px 24px 0 0;
-  padding:24px 20px 36px;width:100%;max-width:430px;
-  max-height:90vh;overflow-y:auto;
-}
-.modal-handle{width:36px;height:4px;border-radius:2px;background:#ddd;margin:0 auto 20px}
-.modal-title{font-size:18px;font-weight:700;margin-bottom:20px;color:var(--text)}
+.modal{background:var(--white);border-radius:24px 24px 0 0;padding:24px 20px 36px;width:100%;max-width:430px}
 .form-group{margin-bottom:14px}
-.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px}
-.form-group input,.form-group select{
-  width:100%;padding:13px 14px;
-  background:var(--bg);border:1.5px solid transparent;
-  border-radius:var(--radius-sm);font-size:15px;color:var(--text);
-  outline:none;font-family:inherit;transition:border .2s;
-}
-.form-group input:focus,.form-group select:focus{border-color:var(--purple)}
-.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn-primary{
-  width:100%;padding:15px;border-radius:var(--radius-sm);
-  background:var(--purple);border:none;cursor:pointer;
-  color:#fff;font-size:16px;font-weight:700;margin-top:8px;
-}
-.btn-primary:active{opacity:.88}
-.btn-secondary{
-  width:100%;padding:14px;border-radius:var(--radius-sm);
-  background:var(--bg);border:none;cursor:pointer;
-  color:var(--text2);font-size:15px;font-weight:600;margin-top:8px;
-}
-
-/* EMPTY */
-.empty{text-align:center;padding:48px 20px;color:var(--text3)}
-.empty-icon{font-size:48px;display:block;margin-bottom:12px}
-
-/* TOAST */
-#toast{
-  position:fixed;top:60px;left:50%;transform:translateX(-50%);
-  background:#1a1a2e;color:#fff;padding:12px 20px;border-radius:12px;
-  font-size:14px;font-weight:500;z-index:500;
-  opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;
-}
-#toast.show{opacity:1}
-
-/* HISTORIAL date groups */
-.date-group-label{
-  font-size:13px;font-weight:700;color:var(--text2);
-  padding:10px 20px 4px;
-}
-
-/* PRESUPUESTO page */
-.budget-setting-card{
-  background:var(--white);border-radius:var(--radius);
-  padding:20px;margin:0 16px 12px;box-shadow:var(--shadow-card);
-}
-.budget-big{font-size:42px;font-weight:800;color:var(--purple);text-align:center;padding:20px 0 8px}
-.budget-meta{text-align:center;font-size:14px;color:var(--text2);margin-bottom:20px}
-.budget-bar2{height:10px;background:var(--bg);border-radius:6px;overflow:hidden;margin-bottom:8px}
-.budget-bar2-fill{height:100%;border-radius:6px;transition:width .5s}
-.budget-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--text2)}
+.form-group input,.form-group select{width:100%;padding:13px 14px;background:var(--bg);border-radius:var(--radius-sm);outline:none}
+.btn-primary{width:100%;padding:15px;border-radius:var(--radius-sm);background:var(--purple);border:none;color:#fff;font-weight:700}
 </style>
 </head>
 <body>
 <div id="app">
-  <!-- PAGES -->
   <div class="pages">
-
-    <!-- ========== RESUMEN ========== -->
+    <!-- Resumen -->
     <div class="page active" id="page-resumen">
-      <div class="month-nav">
-        <button class="month-btn" onclick="changeMonth(-1)">&#8249;</button>
-        <span class="month-label" id="month-label">Junio 2026</span>
-        <button class="month-btn" onclick="changeMonth(1)">&#8250;</button>
-      </div>
-
       <div class="summary-hero">
-        <div class="label">Gasto total del mes</div>
+        <div style="opacity:0.8;font-size:12px">Total Gastado</div>
         <div class="amount" id="res-total">RD$ 0</div>
-        <div class="sub" id="res-sub">0 transacciones</div>
-        <div class="budget-bar-wrap" id="res-budget-wrap" style="display:none">
-          <div class="budget-bar-label">
-            <span>Gastado</span>
-            <span id="res-budget-pct">0% del presupuesto</span>
-          </div>
-          <div class="budget-bar"><div class="budget-fill" id="res-budget-fill" style="width:0%"></div></div>
-        </div>
       </div>
-
       <div class="summary-row">
         <div class="summary-mini">
-          <div class="lbl">Fijos activos</div>
-          <div class="val amber" id="res-fijos">RD$ 0</div>
+            <div style="font-size:11px;color:var(--text2)">Presupuesto</div>
+            <div class="val" id="res-presupuesto">RD$ 0</div>
         </div>
         <div class="summary-mini">
-          <div class="lbl">Disponible</div>
-          <div class="val green" id="res-disp">—</div>
+            <div style="font-size:11px;color:var(--text2)">Restante</div>
+            <div class="val" id="res-restante">RD$ 0</div>
         </div>
       </div>
-
-      <div class="section-label">Por categoría</div>
-      <div class="card" id="res-cats">
-        <div class="empty" style="padding:20px 0"><span class="empty-icon">📊</span>Sin gastos este mes</div>
-      </div>
     </div>
-
-    <!-- ========== GASTOS ========== -->
+    <!-- Gastos -->
     <div class="page" id="page-gastos">
-      <div class="page-header">
-        <span class="page-title">Mis Gastos</span>
-      </div>
-      <div class="chips" id="chips-gastos">
-        <div class="chip active" onclick="setChip(this,'todos')">Todos</div>
-        <div class="chip" onclick="setChip(this,'casa')">🏠 Casa</div>
-        <div class="chip" onclick="setChip(this,'comida')">🍔 Comida</div>
-        <div class="chip" onclick="setChip(this,'salidas')">🎉 Salidas</div>
-        <div class="chip" onclick="setChip(this,'transporte')">🚗 Transporte</div>
-        <div class="chip" onclick="setChip(this,'salud')">💊 Salud</div>
-        <div class="chip" onclick="setChip(this,'ropa')">👕 Ropa</div>
-        <div class="chip" onclick="setChip(this,'educacion')">📚 Educación</div>
-        <div class="chip" onclick="setChip(this,'entretenimiento')">🎬 Entretenimiento</div>
-        <div class="chip" onclick="setChip(this,'otros')">📦 Otros</div>
-      </div>
-      <div id="gastos-list"></div>
+      <div class="page-header"><span class="page-title">Mis Gastos</span></div>
+      <div id="gastos-list" style="padding:0 16px"></div>
     </div>
+  </div>
 
-    <!-- ========== HISTORIAL ========== -->
-    <div class="page" id="page-historial">
-      <div class="page-header">
-        <span class="page-title">Historial</span>
-      </div>
-      <div id="historial-list"></div>
-    </div>
-
-    <!-- ========== FIJOS ========== -->
-    <div class="page" id="page-fijos">
-      <div style="padding:52px 0 0"></div>
-
-      <!-- Gold summary card -->
-      <div class="card-gold" style="margin:0 16px 12px">
-        <div class="fijo-header">
-          <div class="fijo-header-left">
-            <h3>📌 Gastos Fijos</h3>
-            <p>Se repiten cada mes</p>
-          </div>
-          <div class="fijo-header-right">
-            <div class="fijo-total-label">TOTAL MENSUAL</div>
-            <div class="fijo-total-val" id="fijos-total-val">$0.00</div>
-          </div>
-        </div>
-        <button class="btn-register-all" onclick="registrarTodosFijos()">
-          ⚡ Registrar todos en <span id="mes-fijos-label">Junio</span>
-        </button>
-      </div>
-
-      <div id="fijos-list"></div>
-      <div id="fijos-empty" class="empty" style="display:none">
-        <span class="empty-icon">📅</span>
-        Aún no tienes gastos fijos.<br>Agrega uno con el botón +
-      </div>
-    </div>
-
-    <!-- ========== PRESUPUESTO ========== -->
-    <div class="page" id="page-presupuesto">
-      <div class="page-header">
-        <span class="page-title">Presupuesto</span>
-      </div>
-
-      <div class="budget-setting-card">
-        <div style="text-align:center;font-size:13px;color:var(--text2);margin-bottom:4px">Presupuesto mensual</div>
-        <div class="budget-big" id="bp-amount">RD$ 0</div>
-        <div class="budget-meta" id="bp-meta">No configurado</div>
-        <div class="budget-bar2"><div class="budget-bar2-fill" id="bp-bar" style="width:0%;background:var(--purple)"></div></div>
-        <div class="budget-labels"><span id="bp-gastado">Gastado: RD$ 0</span><span id="bp-restante">Restante: —</span></div>
-        <button class="btn-primary" style="margin-top:20px" onclick="openModal('modal-budget')">Editar presupuesto</button>
-      </div>
-
-      <div class="section-label" style="margin-top:8px">Ajustes rápidos</div>
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div>
-            <div style="font-weight:600;font-size:14px">Incluir fijos en el total</div>
-            <div style="font-size:12px;color:var(--text2);margin-top:2px">Suma los gastos fijos activos</div>
-          </div>
-          <button class="toggle on" id="toggle-fijos-include" onclick="toggleFijosInclude(this)"></button>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /pages -->
-
-  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="showPage('resumen',this)">
-      <span class="nav-icon">📊</span>
-      <span>Resumen</span>
-      <span class="nav-dot"></span>
-    </button>
-    <button class="nav-item" onclick="showPage('gastos',this)">
-      <span class="nav-icon">💸</span>
-      <span>Gastos</span>
-      <span class="nav-dot"></span>
-    </button>
-    <button class="nav-item" onclick="showPage('fijos',this)">
-      <span class="nav-icon">📌</span>
-      <span>Fijos</span>
-      <span class="nav-dot"></span>
-    </button>
-    <button class="nav-item" onclick="showPage('historial',this)">
-      <span class="nav-icon">🗂</span>
-      <span>Historial</span>
-      <span class="nav-dot"></span>
-    </button>
-    <button class="nav-item" onclick="showPage('presupuesto',this)">
-      <span class="nav-icon">🎯</span>
-      <span>Presupuesto</span>
-      <span class="nav-dot"></span>
-    </button>
+    <button class="nav-item active" onclick="showPage('resumen',this)">📊 Resumen</button>
+    <button class="nav-item" onclick="showPage('gastos',this)">💸 Gastos</button>
   </nav>
+  <button class="fab" onclick="openModal('modal-gasto')">＋</button>
 </div>
 
-<!-- FAB -->
-<button class="fab" id="fab-btn" onclick="openGastoModal()">＋</button>
-
-<!-- MODAL GASTO -->
+<!-- Modal -->
 <div class="modal-overlay" id="modal-gasto">
   <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-gasto-title">Nuevo gasto</div>
-    <div class="form-group">
-      <label>Descripción</label>
-      <input type="text" id="g-desc" placeholder="Ej: Supermercado">
-    </div>
-    <div class="form-row-2">
-      <div class="form-group">
-        <label>Monto (RD$)</label>
-        <input type="number" id="g-monto" placeholder="0" inputmode="decimal">
-      </div>
-      <div class="form-group">
-        <label>Fecha</label>
-        <input type="date" id="g-fecha">
-      </div>
-    </div>
     <div class="form-group">
       <label>Categoría</label>
       <select id="g-cat">
         <option value="casa">🏠 Casa</option>
         <option value="comida">🍔 Comida</option>
-        <option value="salidas">🎉 Salidas</option>
-        <option value="transporte">🚗 Transporte</option>
-        <option value="salud">💊 Salud</option>
-        <option value="ropa">👕 Ropa</option>
-        <option value="educacion">📚 Educación</option>
-        <option value="entretenimiento">🎬 Entretenimiento</option>
+        <option value="bancos">🏦 Bancos</option>
+        <option value="personas">👤 Personas</option>
         <option value="otros">📦 Otros</option>
       </select>
     </div>
-    <div class="form-group">
-      <label>Nota (opcional)</label>
-      <input type="text" id="g-nota" placeholder="Detalles...">
-    </div>
-    <button class="btn-primary" onclick="saveGasto()">Guardar gasto</button>
-    <button class="btn-secondary" onclick="closeModal('modal-gasto')">Cancelar</button>
+    <input type="text" id="g-desc" placeholder="Descripción" style="margin-bottom:10px">
+    <input type="number" id="g-monto" placeholder="Monto" style="margin-bottom:10px">
+    <button class="btn-primary" onclick="saveGasto()">Guardar</button>
   </div>
 </div>
-
-<!-- MODAL FIJO -->
-<div class="modal-overlay" id="modal-fijo">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Nuevo gasto fijo</div>
-    <div class="form-group">
-      <label>Nombre</label>
-      <input type="text" id="f-nombre" placeholder="Ej: Alquiler">
-    </div>
-    <div class="form-row-2">
-      <div class="form-group">
-        <label>Monto (RD$)</label>
-        <input type="number" id="f-monto" placeholder="0" inputmode="decimal">
-      </div>
-      <div class="form-group">
-        <label>Día de cobro</label>
-        <input type="number" id="f-dia" placeholder="1" min="1" max="31" inputmode="numeric">
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Categoría</label>
-      <select id="f-cat">
-        <option value="casa">🏠 Casa</option>
-        <option value="comida">🍔 Comida</option>
-        <option value="transporte">🚗 Transporte</option>
-        <option value="salud">💊 Salud</option>
-        <option value="educacion">📚 Educación</option>
-        <option value="entretenimiento">🎬 Entretenimiento</option>
-        <option value="otros">📦 Otros</option>
-      </select>
-    </div>
-    <button class="btn-primary" onclick="saveFijo()">Guardar</button>
-    <button class="btn-secondary" onclick="closeModal('modal-fijo')">Cancelar</button>
-  </div>
-</div>
-
-<!-- MODAL BUDGET -->
-<div class="modal-overlay" id="modal-budget">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Presupuesto mensual</div>
-    <div class="form-group">
-      <label>Monto (RD$)</label>
-      <input type="number" id="b-monto" placeholder="Ej: 50000" inputmode="decimal">
-    </div>
-    <button class="btn-primary" onclick="saveBudget()">Guardar presupuesto</button>
-    <button class="btn-secondary" onclick="closeModal('modal-budget')">Cancelar</button>
-  </div>
-</div>
-
-<!-- MODAL EDITAR MONTO FIJO -->
-<div class="modal-overlay" id="modal-fijo-edit">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="fijo-edit-title">Editar monto</div>
-    <div class="form-group">
-      <label>Monto (RD$)</label>
-      <input type="number" id="fe-monto" placeholder="0" inputmode="decimal">
-    </div>
-    <button class="btn-primary" onclick="saveFijoEdit()">Actualizar</button>
-    <button class="btn-secondary" onclick="closeModal('modal-fijo-edit')">Cancelar</button>
-  </div>
-</div>
-
-<div id="toast"></div>
 
 <script>
-// ---- STATE ----
-var gastos = JSON.parse(localStorage.getItem('mg2_gastos')||'[]');
-var fijos = JSON.parse(localStorage.getItem('mg2_fijos')||'[]');
-var budget = parseFloat(localStorage.getItem('mg2_budget')||'0');
-var fijosInclude = localStorage.getItem('mg2_fi')!=='false';
-var currentPage = 'resumen';
-var filterCat = 'todos';
-var editGastoId = null;
-var editFijoId = null;
+let gastos = JSON.parse(localStorage.getItem('mg_gastos')||'[]');
+let budget = parseFloat(localStorage.getItem('mg_budget')||'0');
 
-var now = new Date();
-var viewMonth = now.getMonth();
-var viewYear = now.getFullYear();
-
-var MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-var CAT_COLORS = {
-  casa:'#5c9de0',comida:'#2dd4a0',salidas:'#e0a040',transporte:'#9b5ce0',
-  salud:'#e05c5c',ropa:'#e064aa',educacion:'#40c8e0',entretenimiento:'#b8d420',otros:'#8b93a8'
-};
-var CAT_BG = {
-  casa:'#e8f1fb',comida:'#e1faf3',salidas:'#fef8e6',transporte:'#f0e9ff',
-  salud:'#fde8e8',ropa:'#fde8f6',educacion:'#e5f9fc',entretenimiento:'#f7fde0',otros:'#f0f0f6'
-};
-var CAT_LABELS = {
-  casa:'Casa',comida:'Comida',salidas:'Salidas',transporte:'Transporte',
-  salud:'Salud',ropa:'Ropa',educacion:'Educación',entretenimiento:'Entretenimiento',otros:'Otros'
-};
-var CAT_EMOJI = {
-  casa:'🏠',comida:'🍔',salidas:'🎉',transporte:'🚗',
-  salud:'💊',ropa:'👕',educacion:'📚',entretenimiento:'🎬',otros:'📦'
-};
-
-function save(){
-  localStorage.setItem('mg2_gastos',JSON.stringify(gastos));
-  localStorage.setItem('mg2_fijos',JSON.stringify(fijos));
-  localStorage.setItem('mg2_budget',budget);
-  localStorage.setItem('mg2_fi',fijosInclude);
-}
-function fmt(n){return'RD$ '+Number(n).toLocaleString('es-DO',{minimumFractionDigits:0,maximumFractionDigits:0})}
-function fmtD(n){return'$'+Number(n).toLocaleString('es-DO',{minimumFractionDigits:2,maximumFractionDigits:2})}
-
-// ---- NAVIGATION ----
 function showPage(name, btn){
-  currentPage = name;
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  if(btn) btn.classList.add('active');
-  var fab = document.getElementById('fab-btn');
-  fab.style.display = (name==='gastos'||name==='resumen') ? 'flex' : 'none';
-  if(name==='fijos'){
-    fab.style.display='flex';
-    fab.onclick = openFijoModal;
-  } else {
-    fab.onclick = openGastoModal;
-  }
-  render();
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+name).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
 }
 
-function changeMonth(dir){
-  viewMonth += dir;
-  if(viewMonth>11){viewMonth=0;viewYear++}
-  if(viewMonth<0){viewMonth=11;viewYear--}
-  render();
-}
-
-// ---- RENDER ALL ----
-function render(){
-  document.getElementById('month-label').textContent = MONTHS[viewMonth]+' '+viewYear;
-  document.getElementById('mes-fijos-label').textContent = MONTHS[viewMonth];
-  renderResumen();
-  renderGastos();
-  renderFijos();
-  renderHistorial();
-  renderPresupuesto();
-}
-
-// ---- RESUMEN ----
-function renderResumen(){
-  var mes = gastos.filter(g=>{
-    var d=new Date(g.fecha+'T12:00:00');
-    return d.getMonth()===viewMonth && d.getFullYear()===viewYear;
-  });
-  var total = mes.reduce((a,g)=>a+g.monto,0);
-  var fijosTot = fijos.filter(f=>f.activo).reduce((a,f)=>a+f.monto,0);
-  var disp = budget>0 ? budget-total-(fijosInclude?fijosTot:0) : null;
-
-  document.getElementById('res-total').textContent = fmt(total);
-  document.getElementById('res-sub').textContent = mes.length+' transacciones';
-  document.getElementById('res-fijos').textContent = fmt(fijosTot);
-  var dispEl = document.getElementById('res-disp');
-  dispEl.textContent = disp!==null ? fmt(Math.max(0,disp)) : '—';
-  dispEl.className = 'val '+(disp!==null?(disp<0?'red':'green'):'green');
-
-  if(budget>0){
-    var pct = Math.min(100,Math.round((total/budget)*100));
-    document.getElementById('res-budget-wrap').style.display='block';
-    document.getElementById('res-budget-pct').textContent = pct+'% del presupuesto';
-    var fill = document.getElementById('res-budget-fill');
-    fill.style.width = pct+'%';
-    fill.style.background = pct>90?'#ff6b6b':pct>70?'#ffd93d':'#fff';
-  } else {
-    document.getElementById('res-budget-wrap').style.display='none';
-  }
-
-  // Categories
-  var bycat={};
-  mes.forEach(g=>{bycat[g.categoria]=(bycat[g.categoria]||0)+g.monto});
-  var catsEl = document.getElementById('res-cats');
-  if(!Object.keys(bycat).length){
-    catsEl.innerHTML='<div class="empty" style="padding:20px 0"><span class="empty-icon">📊</span>Sin gastos este mes</div>';
-    return;
-  }
-  var max=Math.max(...Object.values(bycat));
-  catsEl.innerHTML=Object.entries(bycat).sort((a,b)=>b[1]-a[1]).map(([cat,v])=>`
-    <div class="cat-row">
-      <div class="cat-emoji" style="background:${CAT_BG[cat]}">${CAT_EMOJI[cat]}</div>
-      <div class="cat-info">
-        <div class="cat-name">${CAT_LABELS[cat]}</div>
-        <div class="cat-bar" style="background:${CAT_BG[cat]};width:100%">
-          <div style="height:4px;border-radius:4px;background:${CAT_COLORS[cat]};width:${Math.round((v/max)*100)}%;transition:width .4s"></div>
-        </div>
-      </div>
-      <div>
-        <div class="cat-amount">${fmt(v)}</div>
-        <div class="cat-pct">${total>0?Math.round((v/total)*100):0}%</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ---- GASTOS LIST ----
-function renderGastos(){
-  var mes = gastos.filter(g=>{
-    var d=new Date(g.fecha+'T12:00:00');
-    return d.getMonth()===viewMonth && d.getFullYear()===viewYear;
-  });
-  if(filterCat!=='todos') mes=mes.filter(g=>g.categoria===filterCat);
-  mes.sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
-  var el = document.getElementById('gastos-list');
-  if(!mes.length){
-    el.innerHTML='<div class="empty"><span class="empty-icon">💸</span>Sin gastos'+(filterCat!=='todos'?' en esta categoría':' este mes')+'</div>';
-    return;
-  }
-  el.innerHTML='<div class="expense-items-wrap">'+mes.map(g=>`
-    <div class="expense-item">
-      <div class="exp-icon" style="background:${CAT_BG[g.categoria]}">${CAT_EMOJI[g.categoria]}</div>
-      <div class="exp-info">
-        <div class="exp-name">${g.descripcion}</div>
-        <div class="exp-sub">${CAT_LABELS[g.categoria]} · ${formatDateShort(g.fecha)}${g.nota?' · '+g.nota:''}</div>
-      </div>
-      <div class="exp-amount">${fmt(g.monto)}</div>
-      <button class="exp-del" onclick="deleteGasto(${g.id})">🗑</button>
-    </div>
-  `).join('')+'</div>';
-}
-
-function setChip(el,cat){
-  filterCat=cat;
-  document.querySelectorAll('#chips-gastos .chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  renderGastos();
-}
-
-// ---- HISTORIAL ----
-function renderHistorial(){
-  var sorted=[...gastos].sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
-  var el=document.getElementById('historial-list');
-  if(!sorted.length){
-    el.innerHTML='<div class="empty"><span class="empty-icon">🗂</span>No hay gastos aún</div>';
-    return;
-  }
-  // Group by month
-  var groups={};
-  sorted.forEach(g=>{
-    var d=new Date(g.fecha+'T12:00:00');
-    var key=MONTHS[d.getMonth()]+' '+d.getFullYear();
-    if(!groups[key]) groups[key]=[];
-    groups[key].push(g);
-  });
-  el.innerHTML=Object.entries(groups).map(([label,items])=>`
-    <div class="date-group-label">${label}</div>
-    <div class="expense-items-wrap">
-      ${items.map(g=>`
-        <div class="expense-item">
-          <div class="exp-icon" style="background:${CAT_BG[g.categoria]}">${CAT_EMOJI[g.categoria]}</div>
-          <div class="exp-info">
-            <div class="exp-name">${g.descripcion}</div>
-            <div class="exp-sub">${CAT_LABELS[g.categoria]} · ${formatDateShort(g.fecha)}</div>
-          </div>
-          <div class="exp-amount">${fmt(g.monto)}</div>
-          <button class="exp-del" onclick="deleteGasto(${g.id})">🗑</button>
-        </div>
-      `).join('')}
-    </div>
-  `).join('');
-}
-
-// ---- FIJOS ----
-function renderFijos(){
-  var fijosTot = fijos.filter(f=>f.activo).reduce((a,f)=>a+f.monto,0);
-  document.getElementById('fijos-total-val').textContent = fmtD(fijosTot);
-
-  var el = document.getElementById('fijos-list');
-  var emp = document.getElementById('fijos-empty');
-  if(!fijos.length){el.innerHTML='';emp.style.display='block';return}
-  emp.style.display='none';
-
-  // Check which fijos are registered in current view month
-  var registeredKey = viewYear+'-'+viewMonth;
-
-  el.innerHTML=fijos.map(f=>{
-    var isReg = f.registered && f.registered[registeredKey];
-    return`
-    <div class="fijo-card">
-      <div class="fijo-card-top">
-        <div class="fijo-card-icon" style="background:${CAT_BG[f.categoria]}">${CAT_EMOJI[f.categoria]}</div>
-        <div class="fijo-card-info">
-          <h4>${f.nombre}</h4>
-          <p>${CAT_LABELS[f.categoria]}${f.dia?' · Día '+f.dia:''}</p>
-        </div>
-        <div class="fijo-card-right">
-          <button class="btn-amount" onclick="openEditFijo(${f.id})">$ ···</button>
-          <button class="btn-trash" onclick="deleteFijo(${f.id})">🗑</button>
-        </div>
-      </div>
-      <button class="btn-registrar-mes ${isReg?'done':''}" onclick="registrarFijo(${f.id})">
-        ${isReg?'✓ Registrado en '+MONTHS[viewMonth]:'+ Registrar en '+MONTHS[viewMonth]+' ('+fmtD(f.monto)+')'}
-      </button>
-    </div>
-  `}).join('');
-}
-
-function registrarFijo(id){
-  var f = fijos.find(x=>x.id===id);
-  if(!f) return;
-  var key = viewYear+'-'+viewMonth;
-  if(!f.registered) f.registered={};
-  if(f.registered[key]){
-    // unregister
-    delete f.registered[key];
-    gastos = gastos.filter(g=>g.fijoRef!==id+'_'+key);
-    toast('Registro eliminado');
-  } else {
-    f.registered[key]=true;
-    gastos.unshift({
-      id: Date.now(),
-      descripcion: f.nombre+' (fijo)',
-      monto: f.monto,
-      categoria: f.categoria,
-      fecha: viewYear+'-'+pad(viewMonth+1)+'-'+pad(f.dia||1),
-      nota:'Gasto fijo',
-      fijoRef: id+'_'+key
-    });
-    toast('✓ Registrado en '+MONTHS[viewMonth]);
-  }
-  save();render();
-}
-
-function registrarTodosFijos(){
-  var alguno=false;
-  fijos.forEach(f=>{
-    var key=viewYear+'-'+viewMonth;
-    if(!f.registered) f.registered={};
-    if(!f.registered[key]){
-      f.registered[key]=true;
-      gastos.unshift({
-        id: Date.now()+Math.random(),
-        descripcion: f.nombre+' (fijo)',
-        monto: f.monto,
-        categoria: f.categoria,
-        fecha: viewYear+'-'+pad(viewMonth+1)+'-'+pad(f.dia||1),
-        nota:'Gasto fijo',
-        fijoRef: f.id+'_'+key
-      });
-      alguno=true;
-    }
-  });
-  save();render();
-  toast(alguno?'⚡ Todos registrados':'Ya estaban todos registrados');
-}
-
-function openEditFijo(id){
-  editFijoId=id;
-  var f=fijos.find(x=>x.id===id);
-  document.getElementById('fijo-edit-title').textContent='Editar: '+f.nombre;
-  document.getElementById('fe-monto').value=f.monto;
-  openModal('modal-fijo-edit');
-}
-function saveFijoEdit(){
-  var m=parseFloat(document.getElementById('fe-monto').value);
-  if(!m){toast('Ingresa un monto');return}
-  var f=fijos.find(x=>x.id===editFijoId);
-  f.monto=m;
-  save();render();
-  closeModal('modal-fijo-edit');
-  toast('Monto actualizado');
-}
-
-function deleteFijo(id){
-  if(!confirm('¿Eliminar este gasto fijo?'))return;
-  fijos=fijos.filter(f=>f.id!==id);
-  save();render();
-}
-
-// ---- PRESUPUESTO ----
-function renderPresupuesto(){
-  document.getElementById('bp-amount').textContent=budget>0?fmt(budget):'Sin configurar';
-  var mes=gastos.filter(g=>{var d=new Date(g.fecha+'T12:00:00');return d.getMonth()===viewMonth&&d.getFullYear()===viewYear});
-  var tot=mes.reduce((a,g)=>a+g.monto,0);
-  var pct=budget>0?Math.min(100,Math.round((tot/budget)*100)):0;
-  document.getElementById('bp-bar').style.width=pct+'%';
-  document.getElementById('bp-bar').style.background=pct>90?'#e74c3c':pct>70?'#f39c12':'#6c5ce7';
-  document.getElementById('bp-gastado').textContent='Gastado: '+fmt(tot);
-  document.getElementById('bp-restante').textContent=budget>0?'Restante: '+fmt(Math.max(0,budget-tot)):'Sin presupuesto';
-  document.getElementById('bp-meta').textContent=budget>0?(pct+'% usado este mes'):'Toca "Editar presupuesto" para configurar';
-}
-
-function toggleFijosInclude(btn){
-  fijosInclude=!fijosInclude;
-  btn.className='toggle '+(fijosInclude?'on':'off');
-  save();render();
-}
-
-// ---- GASTO MODAL ----
-function openGastoModal(id){
-  editGastoId=id||null;
-  document.getElementById('modal-gasto-title').textContent=id?'Editar gasto':'Nuevo gasto';
-  if(id){
-    var g=gastos.find(x=>x.id===id);
-    document.getElementById('g-desc').value=g.descripcion;
-    document.getElementById('g-monto').value=g.monto;
-    document.getElementById('g-cat').value=g.categoria;
-    document.getElementById('g-fecha').value=g.fecha;
-    document.getElementById('g-nota').value=g.nota||'';
-  } else {
-    document.getElementById('g-desc').value='';
-    document.getElementById('g-monto').value='';
-    document.getElementById('g-cat').value='casa';
-    document.getElementById('g-fecha').value=new Date().toISOString().split('T')[0];
-    document.getElementById('g-nota').value='';
-  }
-  openModal('modal-gasto');
-}
 function saveGasto(){
-  var desc=document.getElementById('g-desc').value.trim();
-  var monto=parseFloat(document.getElementById('g-monto').value);
-  var cat=document.getElementById('g-cat').value;
-  var fecha=document.getElementById('g-fecha').value;
-  var nota=document.getElementById('g-nota').value.trim();
-  if(!desc||!monto||!fecha){toast('Completa todos los campos');return}
-  if(editGastoId){
-    var i=gastos.findIndex(x=>x.id===editGastoId);
-    gastos[i]={...gastos[i],descripcion:desc,monto,categoria:cat,fecha,nota};
-  } else {
-    gastos.unshift({id:Date.now(),descripcion:desc,monto,categoria:cat,fecha,nota});
-  }
-  save();render();closeModal('modal-gasto');
-  toast('✓ Gasto guardado');
-}
-function deleteGasto(id){
-  gastos=gastos.filter(g=>g.id!==id);
-  save();render();toast('Gasto eliminado');
+    const desc = document.getElementById('g-desc').value;
+    const monto = parseFloat(document.getElementById('g-monto').value);
+    const cat = document.getElementById('g-cat').value;
+    if(desc && monto){
+        gastos.push({desc, monto, cat, id: Date.now()});
+        localStorage.setItem('mg_gastos', JSON.stringify(gastos));
+        document.getElementById('modal-gasto').classList.remove('open');
+        render();
+    }
 }
 
-// ---- FIJO MODAL ----
-function openFijoModal(){openModal('modal-fijo')}
-function saveFijo(){
-  var nombre=document.getElementById('f-nombre').value.trim();
-  var monto=parseFloat(document.getElementById('f-monto').value);
-  var cat=document.getElementById('f-cat').value;
-  var dia=parseInt(document.getElementById('f-dia').value)||1;
-  if(!nombre||!monto){toast('Completa nombre y monto');return}
-  fijos.push({id:Date.now(),nombre,monto,categoria:cat,dia,activo:true,registered:{}});
-  save();render();closeModal('modal-fijo');
-  toast('✓ Gasto fijo guardado');
-  document.getElementById('f-nombre').value='';
-  document.getElementById('f-monto').value='';
-  document.getElementById('f-dia').value='';
+function render(){
+    const total = gastos.reduce((a,b)=>a+b.monto, 0);
+    document.getElementById('res-total').textContent = 'RD$ '+total;
+    document.getElementById('res-presupuesto').textContent = 'RD$ '+budget;
+    document.getElementById('res-restante').textContent = 'RD$ '+(budget - total);
+    
+    const list = document.getElementById('gastos-list');
+    list.innerHTML = gastos.map(g=>`<div style="padding:10px;background:white;margin-bottom:5px;border-radius:10px">${g.desc} - RD$ ${g.monto} (${g.cat})</div>`).join('');
 }
 
-// ---- BUDGET ----
-function saveBudget(){
-  var m=parseFloat(document.getElementById('b-monto').value);
-  if(!m){toast('Ingresa un monto');return}
-  budget=m;save();render();
-  closeModal('modal-budget');toast('✓ Presupuesto guardado');
-}
-
-// ---- UTILS ----
 function openModal(id){document.getElementById(id).classList.add('open')}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-function pad(n){return String(n).padStart(2,'0')}
-function formatDateShort(str){
-  if(!str)return'';
-  var p=str.split('-');
-  return p[2]+'/'+p[1]+'/'+p[0].slice(2);
-}
-function toast(msg){
-  var t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
-}
-
-// Close modals on overlay click
-document.querySelectorAll('.modal-overlay').forEach(o=>{
-  o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('open')});
-});
-
-// INIT
 render();
 </script>
 </body>
