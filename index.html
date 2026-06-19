@@ -428,7 +428,7 @@ html,body{
     <button class="nav-item" onclick="showPage('presupuesto',this)"><span class="nav-icon">🎯</span><span>Presupuesto</span><span class="nav-dot"></span></button>
   </nav>
 
-  <button class="fab" id="fab-btn" onclick="openGastoModal()">＋</button>
+  <button class="fab" id="fab-btn">＋</button>
 </div>
 
 <div class="modal-overlay" id="modal-gasto">
@@ -532,10 +532,19 @@ function showPage(name, btn){
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   if(btn) btn.classList.add('active');
-  var fab = document.getElementById('fab-btn');
-  fab.style.display = (name==='gastos'||name==='resumen') ? 'flex' : 'none';
-  if(name==='fijos'){fab.style.display='flex';fab.onclick = openFijoModal;} else {fab.onclick = openGastoModal;}
+  updateFab();
   render();
+}
+
+function updateFab(){
+  var fab = document.getElementById('fab-btn');
+  fab.style.display = ['resumen','gastos','fijos'].indexOf(currentPage) >= 0 ? 'flex' : 'none';
+  fab.onclick = null;
+  if(currentPage === 'fijos'){
+    fab.onclick = function(){ openFijoModal(); };
+  } else {
+    fab.onclick = function(){ openGastoModal(); };
+  }
 }
 
 function changeMonth(dir){viewMonth += dir;if(viewMonth>11){viewMonth=0;viewYear++}if(viewMonth<0){viewMonth=11;viewYear--}render();}
@@ -703,6 +712,7 @@ function pad(n){return String(n).padStart(2,'0')}
 function formatDateShort(str){if(!str)return'';var p=str.split('-');return p[2]+'/'+p[1]+'/'+p[0].slice(2);}
 function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('open')});});
+updateFab();
 render();
 </script>
 </body>
